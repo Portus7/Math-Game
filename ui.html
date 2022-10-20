@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <!-- <meta name='viewport' content='width=device-width, initial-scale=1'> -->
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="Https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="user_interface"></div>
+    <script type="text/babel">
+        function App(){
+            const operators = {
+                0:"+",
+                1:"-",
+                2:"*"
+            }
+
+            const [state, setState] = React.useState({
+                num1: Math.ceil(Math.random()*10),
+                num2: Math.ceil(Math.random()*10),
+                response: "",
+                score: 0,
+                operator: operators[Math.floor(Math.random()*Object.keys(operators).length)]
+            });
+
+            // document.addEventListener("mousemove", () => {
+            // document.querySelector("#ans").innerHTML = ""
+        // })
+        function updateResponse(event){
+            document.querySelector('#ans').innerHTML= ""
+
+            setState({
+                ...state,
+                response: event.target.value
+            });
+        }
+        function checkResponse(event){
+            if (event.key === "Enter"){
+                if(eval(`${state.num1} ${state.operator} ${state.num2}`) === parseInt(state.response)){
+                    setState({
+                        num1: Math.ceil(Math.random()*10),
+                        num2: Math.ceil(Math.random()*10),
+                        score: state.score + 1,
+                        response: "",
+                        operator: operators[Math.floor(Math.random()*Object.keys(operators).length)]
+                    })
+                    document.querySelector('#ans').innerHTML= "CORRECT :D"
+                }else{
+                    setState({
+                        ...state,
+                        score: state.score - 1
+                    })
+                    document.querySelector('#ans').innerHTML= "INCORRECT :c, try again:D"
+
+                }
+
+            }
+        }
+        if (state.score === 3){
+            return (
+                <div className="win">
+                    <h1>You Win! :D</h1>
+                </div>
+            )
+
+        }
+        return(
+            <div className="interface">
+                <div>{state.num1} {state.operator} {state.num2}</div>
+                <input autoFocus={true} onKeyPress={checkResponse} onChange={updateResponse} value={state.response} />
+                <div>score:{state.score}</div>
+                <h1 id="ans"></h1>
+            </div>
+        );
+        }
+        ReactDOM.render(<App />, document.getElementById("user_interface"))
+    </script>
+</body>
+</html>
